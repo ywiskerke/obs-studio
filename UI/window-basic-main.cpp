@@ -55,6 +55,8 @@
 #include "volume-control.hpp"
 #include "remote-text.hpp"
 
+#include "source-tree.hpp"
+
 #if defined(_WIN32) && defined(ENABLE_WIN_UPDATER)
 #include "win-update/win-update.hpp"
 #endif
@@ -131,6 +133,8 @@ static void AddExtraModulePaths()
 
 static QList<QKeySequence> DeleteKeys;
 
+extern obs_frontend_callbacks *InitializeAPIInterface(OBSBasic *main);
+
 OBSBasic::OBSBasic(QWidget *parent)
 	: OBSMainWindow  (parent),
 	  ui             (new Ui::OBSBasic)
@@ -143,6 +147,8 @@ OBSBasic::OBSBasic(QWidget *parent)
 	studioProgramProjectorArray.resize(10, 0);
 
 	setAcceptDrops(true);
+
+	api = InitializeAPIInterface(this);
 
 	ui->setupUi(this);
 	ui->previewDisabledLabel->setVisible(false);
@@ -1402,8 +1408,6 @@ static void AddProjectorMenuMonitors(QMenu *parent, QObject *target,
 #define SHUTDOWN_SEPARATOR \
 	"==== Shutting down =================================================="
 
-extern obs_frontend_callbacks *InitializeAPIInterface(OBSBasic *main);
-
 #define UNSUPPORTED_ERROR \
 	"Failed to initialize video:\n\nRequired graphics API functionality " \
 	"not found.  Your GPU may not be supported."
@@ -1421,6 +1425,18 @@ void OBSBasic::OBSInit()
 	char savePath[512];
 	char fileName[512];
 	int ret;
+
+	SourceTree *tree = new SourceTree();
+	tree->AddItem("Hi");
+	tree->AddItem("Testing, 123");
+
+	QVBoxLayout *test123 = new QVBoxLayout();
+	test123->addWidget(tree);
+
+	QWidget *test = new QWidget(nullptr);
+	test->setAttribute(Qt::WA_DeleteOnClose, true);
+	test->setLayout(test123);
+	test->show();
 
 	if (!sceneCollection)
 		throw "Failed to get scene collection name";
@@ -1468,8 +1484,6 @@ void OBSBasic::OBSInit()
 
 	InitOBSCallbacks();
 	InitHotkeys();
-
-	api = InitializeAPIInterface(this);
 
 	AddExtraModulePaths();
 	blog(LOG_INFO, "---------------------------------");
