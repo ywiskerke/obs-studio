@@ -238,10 +238,6 @@ private:
 	void TempStreamOutput(const char *url, const char *key,
 			int vBitrate, int aBitrate);
 
-	void CreateInteractionWindow(obs_source_t *source);
-	void CreatePropertiesWindow(obs_source_t *source);
-	void CreateFiltersWindow(obs_source_t *source);
-
 	void CloseDialogs();
 	void ClearSceneData();
 
@@ -562,6 +558,10 @@ public:
 	void OpenSavedProjectors();
 	void RemoveSavedProjectors(int monitor);
 
+	void CreateInteractionWindow(obs_source_t *source);
+	void CreatePropertiesWindow(obs_source_t *source);
+	void CreateFiltersWindow(obs_source_t *source);
+
 protected:
 	virtual void closeEvent(QCloseEvent *event) override;
 	virtual void changeEvent(QEvent *event) override;
@@ -601,7 +601,6 @@ private slots:
 	void on_actionSceneUp_triggered();
 	void on_actionSceneDown_triggered();
 	void on_sources_customContextMenuRequested(const QPoint &pos);
-	void on_sources_itemDoubleClicked(QListWidgetItem *item);
 	void on_scenes_itemDoubleClicked(QListWidgetItem *item);
 	void on_actionAddSource_triggered();
 	void on_actionRemoveSource_triggered();
